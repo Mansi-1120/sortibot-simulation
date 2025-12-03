@@ -66,11 +66,11 @@ source install/setup.bash
 
 🚀 Launch the Simulation
 
-Start Gazebo World
+#Start Gazebo World-
 
-gazebo sortibot_world.world
+ros2 launch sortibot_gazebo sortibot_world.launch.py
 
-Spawn the Robotic Arm
+#Spawn the Robotic Arm-
 
 ros2 launch sortibot_arm spawn_arm.launch.py
 
