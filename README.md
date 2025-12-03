@@ -1,52 +1,41 @@
-🤖 SortiBot – Robotic Waste Sorting Simulation
+# 🤖 SortiBot – Robotic Waste Sorting Simulation
 
-🧭 Overview
+## Overview
 
 SortiBot is a ROS 2 and Gazebo–based robotic simulation designed for automated waste sorting using vision-guided manipulation. The system consists of a 4-DOF robotic arm mounted on a platform next to a conveyor belt, equipped with an eye-in-hand camera for object detection and classification. The simulation supports segregation of objects into metal, plastic, and paper/wood categories.
 
 This repository provides the full simulation stack, including the Gazebo world, robot description (URDF), camera integration, and scaffolding for perception and control development.
 
-
 ---
 
-✨ Features
+## ✨ Features
 
 ✅ Gazebo world with:
+- Conveyor belt  
+- Sorting bins (metal, plastic, paper)  
+- Robot mounting platform  
 
-Conveyor belt
-
-Sorting bins (metal, plastic, paper)
-
-Robot mounting platform
-
-
-✅ Custom 4-DOF robotic arm (URDF)
-✅ Wrist-mounted RGB camera (Gazebo ROS camera plugin)
-✅ Camera image published to ROS 2 topics
-✅ Modular structure for perception + manipulation
+✅ Custom 4-DOF robotic arm (URDF)  
+✅ Wrist-mounted RGB camera (Gazebo ROS camera plugin)  
+✅ Camera image published to ROS 2 topics  
+✅ Modular structure for perception + manipulation  
 ✅ Ready for object detection integration (TFLite / Edge Impulse)
 
+---
+
+## 🖥️ System Requirements
+
+- Ubuntu 22.04  
+- ROS 2 Humble  
+- Gazebo (Classic)  
+- colcon  
+- Python 3.10+
 
 ---
 
-🧰 System Requirements
+## 📁 Repository Structure
 
-Ubuntu 22.04
-
-ROS 2 Humble
-
-Gazebo (Classic)
-
-colcon
-
-Python 3.10+
-
-
-
----
-
-📁 Repository Structure
-
+```text
 sortibot_ws/
 ├── src/
 │   ├── sortibot_arm/
@@ -58,9 +47,6 @@ sortibot_ws/
 │   │   ├── worlds/
 │   │   │   └── sortibot_world.world
 
-
----
-
 📥 Clone the Repository
 
 git clone https://github.com/Mansi-1120/sortibot-simulation.git
@@ -69,7 +55,7 @@ cd sortibot-simulation
 
 ---
 
-🛠 Build the Workspace
+🛠️ Build the Workspace
 
 cd ~/sortibot_ws
 colcon build
@@ -91,7 +77,7 @@ ros2 launch sortibot_arm spawn_arm.launch.py
 
 ---
 
-📸 Camera Topics
+📷 Camera Topics
 
 Verify camera topics:
 
@@ -108,23 +94,25 @@ ros2 run rqt_image_view rqt_image_view
 
 ---
 
-📦 Dummy Objects
+🧱 Dummy Objects
 
 Dummy objects (metal, plastic, paper) are included in the Gazebo world to simulate detection and sorting scenarios.
+
 These objects support perception pipeline testing before deploying real datasets.
 
 
 ---
 
-🗂 Dataset Usage
+📊 Dataset Usage
 
 Pre-collected datasets annotated using Label Studio will be used for training object detection models (TensorFlow Lite / Edge Impulse).
+
 Simulation objects are used only for integration testing, not training.
 
 
 ---
 
-🔮 Future Work
+🔭 Future Work
 
 Object detection inference (TFLite / Edge Impulse)
 
@@ -140,7 +128,7 @@ Sorting automation logic
 
 ---
 
-👩‍💻 Maintainer
+👤 Maintainer
 
 Mansi Singh
 Robotics | AI | Manipulation
