@@ -148,7 +148,7 @@
     <!-- Height = 0.6 → z pose = 0.3 so they sit on ground -->
     <model name="bin_metal">
       <static>true</static>
-      <pose>1.0 -0.35 0.3 0 0 0</pose>
+      <pose>0.90 -0.90 0.3 0 0 0</pose>
       <link name="body">
         <collision name="col">
           <geometry>
@@ -174,7 +174,7 @@
 
     <model name="bin_plastic">
       <static>true</static>
-      <pose>1.0 0.0 0.3 0 0 0</pose>
+      <pose>0.90 -0.55 0.3 0 0 0</pose>
       <link name="body">
         <collision name="col">
           <geometry>
@@ -200,7 +200,7 @@
 
     <model name="bin_paper">
       <static>true</static>
-      <pose>1.0 0.35 0.3 0 0 0</pose>
+      <pose>0.90 -0.20 0.3 0 0 0</pose>
       <link name="body">
         <collision name="col">
           <geometry>
@@ -339,4 +339,3 @@
 
   </world>
 </sdf>
-
