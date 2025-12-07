@@ -1,181 +1,236 @@
-#🤖 SortiBot – Robotic Waste Sorting Simulation 
+# 🤖 SortiBot – Robotic Waste Sorting Simulation
 
 ## Overview
 
-SortiBot is a ROS 2 + Gazebo–based robotic simulation designed for automated waste sorting using vision-guided manipulation.  
-The system consists of a 4-DOF robotic arm mounted on a platform next to a conveyor belt, equipped with an eye-in-hand camera for object detection and classification.  
-The simulation supports segregation of objects into **metal**, **plastic**, and **paper/wood** categories.
+SortiBot is a *ROS 2 + Gazebo–based robotic simulation* designed for automated waste sorting using *vision-guided manipulation*.  
+The system consists of a *custom 4-DOF robotic arm* mounted next to a conveyor belt and equipped with an *eye-in-hand RGB camera* for real-time object perception.
 
-This repository provides the full simulation stack, including:
+The simulation supports segregation of objects into the following categories:
 
-- Gazebo world
-- Robot description (URDF)
-- Camera integration
-- Scaffolding for perception and control development
+- *metal*
+- *plastic*
+- *paper / wood*
 
----
+This repository provides the *complete simulation and perception stack*, enabling integration between vision and manipulation modules for end-to-end waste sorting automation.
+
+
 
 ## ✨ Features
 
 - ✅ Gazebo world with:
   - Conveyor belt
-  - Sorting bins (metal, plastic, paper)
+  - Sorting bins (metal, plastic, paper/wood)
   - Robot mounting platform  
-- ✅ Custom 4-DOF robotic arm (URDF)
-- ✅ Wrist-mounted RGB camera (Gazebo ROS camera plugin)
-- ✅ Camera image published to ROS 2 topics
-- ✅ Modular structure for perception + manipulation
-- ✅ Ready for object detection integration (TensorFlow Lite / Edge Impulse)
+- ✅ Custom-designed 4-DOF robotic arm (URDF)
+- ✅ Wrist-mounted RGB camera using Gazebo ROS camera plugin
+- ✅ ROS 2 image streaming to /sortibot/sortibot_camera/image_raw
+- ✅ TensorFlow Lite–based *real-time perception node*
+- ✅ High-level control commands published to /sortibot/control
+- ✅ Modular structure for perception and manipulation separation
 
 ---
 
-## 🖥️ System Requirements
+## 🖥 System Requirements
 
 - Ubuntu 22.04
 - ROS 2 Humble
 - Gazebo (Classic)
-- `colcon`
+- colcon
 - Python 3.10+
+- TensorFlow (CPU – TensorFlow Lite runtime)
 
 ---
 
 ## 📂 Repository Structure
 
 ```text
-sortibot_ws/              # ROS 2 workspace (local folder name can be anything)
+sortibot_ws/
 ├── src/
-│   ├── sortibot_arm/     # 4-DOF arm + URDF + spawn launch
+│   ├── sortibot_arm/              # 4-DOF arm, URDF and spawn launch
 │   │   ├── urdf/
 │   │   │   └── sortibot_4dof.urdf
 │   │   ├── launch/
 │   │   │   └── spawn_arm.launch.py
-│   ├── sortibot_gazebo/  # Gazebo world + launch
+│
+│   ├── sortibot_gazebo/           # Gazebo world and environment
 │   │   ├── worlds/
 │   │   │   └── sortibot_world.world
 │   │   ├── launch/
 │   │   │   └── sortibot_world.launch.py
+│
+│   ├── sortibot_perception/       # Vision-based perception node
+│   │   ├── src/
+│   │   │   └── perception_node.py
+│   │   ├── models/
+│   │   │   ├── model.tflite
+│   │   │   └── labels.txt
+│   │   └── launch/
+│   │       └── perception.launch.py
 
-🏗️ Create the Workspace and Clone the Repository
 
-On any machine (including teammates), do:
+
+🏗 Create the Workspace and Clone the Repository
 
 # 1. Create a ROS 2 workspace
 mkdir -p ~/sortibot_ws
 cd ~/sortibot_ws
 
-# 2. Clone this repository into the workspace root
+# 2. Clone the repository
 git clone https://github.com/Mansi-1120/sortibot-simulation.git .
 
-# Now your structure is:
-# ~/sortibot_ws/src/sortibot_arm
-# ~/sortibot_ws/src/sortibot_gazebo
+
+
 
 🔨 Build the Workspace
-
-#From inside the workspace:
 
 cd ~/sortibot_ws
 source /opt/ros/humble/setup.bash
 colcon build
 source install/setup.bash
 
-
-Make sure to source install/setup.bash in every new terminal before running ROS 2 commands.
+📌 Make sure to source install/setup.bash in every new terminal.
 
 🚀 Launch the Simulation
-1. Start the Gazebo World
+
+1️⃣ Start the Gazebo World
+
 source /opt/ros/humble/setup.bash
 source ~/sortibot_ws/install/setup.bash
 ros2 launch sortibot_gazebo sortibot_world.launch.py
 
+This launches:
 
-This will start Gazebo with:
+Conveyor belt
 
-- Conveyor belt
+Sorting bins
 
-- Three colored bins (metal, plastic, paper)
+Robot platform
 
-- Arm platform
+Dummy objects for testing
 
-- Dummy objects on the conveyor
 
-2. Spawn the Robotic Arm
 
-#In a new terminal:
+---
+
+2️⃣ Spawn the Robotic Arm
 
 source /opt/ros/humble/setup.bash
 source ~/sortibot_ws/install/setup.bash
 ros2 launch sortibot_arm spawn_arm.launch.py
 
-
 You should now see:
 
 1. The 4-DOF robotic arm
 
-2. Mounted on the gray platform
+
+2. Mounted on the platform
+
 
 3. Facing the conveyor and bins
 
-📷 Camera Topics
 
-#Check available camera topics:
+
+
+
+📷 Camera Topics
 
 ros2 topic list | grep camera
 
+Expected topic:
 
-#Expected topic:
+/sortibot/sortibot_camera/image_raw
 
-/sortibot/camera/image_raw
-
-
-#To view the camera output (if rqt_image_view is installed):
+To visualize:
 
 ros2 run rqt_image_view rqt_image_view
 
 
-Then select /sortibot/camera/image_raw from the dropdown.
+
+
+🧠 Perception Node (Implemented ✅)
+
+The perception module performs real-time object classification using a TensorFlow Lite model exported from Edge Impulse.
+
+Run Perception
+
+ros2 launch sortibot_perception perception.launch.py
+
+Published Topics
+
+Topic	Type	Description
+
+/sortibot/object_class	std_msgs/String	Detected class label (metal, plastic, paper_wood)
+/sortibot/control	std_msgs/String	High-level control command for motion
+
+
+Control Commands
+
+pick_metal
+
+pick_plastic
+
+pick_paper_wood
+
+idle
+
+
+These commands are designed to be consumed by a motion control node to trigger corresponding pick-and-place actions.
+
+
+
 
 🧱 Dummy Objects
 
-The Gazebo world includes simple colored dummy objects placed on the conveyor to simulate:
+The Gazebo world includes colored dummy objects representing:
 
-1. Metal-like objects
+Metal-like
 
-2. Plastic-like objects
+Plastic-like
 
-3. Paper/wood-like objects
+Paper/wood-like
 
-These objects are meant for:
 
-1. Testing camera view and framing
+These are used for:
 
-2. Early integration testing of perception + motion
+Camera framing validation
 
-They are not used directly for training; they are only for simulation and pipeline testing.
+End-to-end pipeline testing (camera → inference → control)
 
-🗂️ Dataset Usage
 
-1. Real datasets (images of metal, plastic, paper/wood) are collected and annotated externally (e.g., Label Studio, COCO format).
 
-2. These datasets will be used to train object detection or classification models (TensorFlow Lite / Edge Impulse).
 
-Simulation objects are used for:
 
-1.Verifying model integration
+🗂 Dataset Usage
 
-2. Testing the full loop: camera → prediction → motion
+1. Real-world datasets are collected and annotated externally (COCO / Edge Impulse).
+
+
+2. Models are trained using Edge Impulse or TensorFlow.
+
+
+3. Exported .tflite models are integrated into this ROS 2 perception node.
+
+
+
+Simulation objects are not used for training, only for pipeline validation.
+
+
+
 
 🔭 Future Work
 
-1. Object detection inference node (TensorFlow Lite / Edge Impulse)
+Motion planning with MoveIt 2
 
-2. Pick-and-place pipeline
+Closed-loop pick-and-place execution
 
-3. Arm motion planning
+Gripper control integration
 
-4. ROS 2 perception node
+Multi-object tracking on the conveyor
 
-5. Automated sorting logic based on model outputs
+Optimized inference for embedded Edge AI
+
+
+
 
 👤 Maintainer
 
